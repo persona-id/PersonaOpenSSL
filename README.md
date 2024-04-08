@@ -31,7 +31,7 @@ It takes some time to keep it all for your convenience, so maybe spare $1, so I 
 You don't have to use pre-built binaries I provide. You can build it locally on your trusted machine.
 
 ```
-$ git clone https://github.com/krzyzanowskim/OpenSSL.git
+$ git clone https://github.com/persona-id/PersonaOpenSSL.git
 $ cd OpenSSL
 $ make
 ```
@@ -48,7 +48,7 @@ Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integrat
 
 ```
 dependencies: [
-    .package(url: "https://github.com/krzyzanowskim/OpenSSL.git", .upToNextMinor(from: "1.1.1700"))
+    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", .upToNextMinor(from: "1.1.1700"))
 ]
 ```
 
@@ -57,20 +57,6 @@ dependencies: [
 ````
 pod 'OpenSSL-Universal'
 ````
-
-### Carthage
-
-* If building from source is preferred:
-
-```
-github "krzyzanowskim/OpenSSL"
-```
-
-* If using a prebuilt framework is preferred:
-
-```
-binary "https://raw.githubusercontent.com/krzyzanowskim/OpenSSL/master/OpenSSL.json"
-```
 
 ### Authors
 

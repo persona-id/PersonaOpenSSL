@@ -3,7 +3,7 @@ CODE_SIGN_IDENTITY[sdk=macosx*] = Developer ID Application
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = Apple Distribution
 CODE_SIGN_IDENTITY[sdk=iphonesimulator*] = iPhone Distribution
 CODE_SIGN_STYLE = Manual
-DEVELOPMENT_TEAM = 67RAULRX93
+DEVELOPMENT_TEAM = YA49JBJSCR
 
 SKIP_INSTALL = NO
 APPLICATION_EXTENSION_API_ONLY = YES

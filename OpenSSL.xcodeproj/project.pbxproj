@@ -3,10 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4DF95FC42BC45C28001FBCF6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4DF95FC32BC45C28001FBCF6 /* PrivacyInfo.xcprivacy */; };
+		4DF95FC62BC45C35001FBCF6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4DF95FC52BC45C35001FBCF6 /* PrivacyInfo.xcprivacy */; };
+		4DF95FC82BC45C40001FBCF6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4DF95FC72BC45C40001FBCF6 /* PrivacyInfo.xcprivacy */; };
+		4DF95FCA2BC45C48001FBCF6 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4DF95FC92BC45C48001FBCF6 /* PrivacyInfo.xcprivacy */; };
 		752D6DA4258471CC00E999E1 /* err.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05A62256E7B9100FB91E0 /* err.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		752D6DA5258471CC00E999E1 /* pkcs7err.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05A3C256E7B9000FB91E0 /* pkcs7err.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		752D6DA6258471CC00E999E1 /* dh.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05A21256E7B8F00FB91E0 /* dh.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -439,6 +443,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4DF95FC32BC45C28001FBCF6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = support/ios/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4DF95FC52BC45C35001FBCF6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = support/iphonesimulator/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4DF95FC72BC45C40001FBCF6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = support/macos/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4DF95FC92BC45C48001FBCF6 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = support/macos_catalyst/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		751BE47925845DB800E66ABE /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = macosx_catalyst/lib/libcrypto.a; sourceTree = "<group>"; };
 		751BE47B25845DC300E66ABE /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = macosx_catalyst/lib/libssl.a; sourceTree = "<group>"; };
 		751BE48025845E1F00E66ABE /* opensslconf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = opensslconf.h; path = macos_catalyst/include/openssl/opensslconf.h; sourceTree = "<group>"; };
@@ -1204,6 +1212,10 @@
 		9F4A2626223BCE31005CB63A = {
 			isa = PBXGroup;
 			children = (
+				4DF95FC32BC45C28001FBCF6 /* PrivacyInfo.xcprivacy */,
+				4DF95FC52BC45C35001FBCF6 /* PrivacyInfo.xcprivacy */,
+				4DF95FC72BC45C40001FBCF6 /* PrivacyInfo.xcprivacy */,
+				4DF95FC92BC45C48001FBCF6 /* PrivacyInfo.xcprivacy */,
 				752D6E4C258473AF00E999E1 /* catalyst */,
 				75B05ADD256E7BB900FB91E0 /* macosx */,
 				75B059FE256E7B5F00FB91E0 /* iphoneos */,
@@ -1793,6 +1805,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DF95FCA2BC45C48001FBCF6 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1800,6 +1813,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DF95FC62BC45C35001FBCF6 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1807,6 +1821,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DF95FC42BC45C28001FBCF6 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1814,6 +1829,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4DF95FC82BC45C40001FBCF6 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1883,11 +1899,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YA49JBJSCR;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -1924,7 +1943,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -1966,11 +1985,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YA49JBJSCR;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2001,7 +2023,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
@@ -2228,6 +2250,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2264,7 +2287,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -2312,6 +2335,7 @@
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2342,7 +2366,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = iphoneos;
 				SUPPORTED_PLATFORMS = iphoneos;
 				SUPPORTS_MACCATALYST = NO;
@@ -2386,12 +2410,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2428,7 +2454,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = macosx;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2467,12 +2493,14 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEFINES_MODULE = YES;
+				"DEVELOPMENT_TEAM[sdk=macosx*]" = YA49JBJSCR;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2503,7 +2531,7 @@
 					"-Xlinker",
 					"-all_load",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.github.krzyzanowskim.OpenSSL;
+				PRODUCT_BUNDLE_IDENTIFIER = com.withpersona.sdk.Persona2.OpenSSL;
 				SDKROOT = macosx;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
