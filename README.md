@@ -48,7 +48,7 @@ Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integrat
 
 ```
 dependencies: [
-    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", .upToNextMinor(from: "1.1.1700"))
+    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", .upToNextMinor(from: "1.0.0"))
 ]
 ```
 
