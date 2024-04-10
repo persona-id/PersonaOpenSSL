@@ -55,7 +55,7 @@ dependencies: [
 ### CocoaPods
 
 ````
-pod 'OpenSSL-Universal'
+pod 'Persona-OpenSSL-Universal'
 ````
 
 ### Authors
