@@ -10,13 +10,13 @@
 #ifndef HEADER_PKCS7_H
 # define HEADER_PKCS7_H
 
-# include <openssl/asn1.h>
-# include <openssl/bio.h>
-# include <openssl/e_os2.h>
+# include <personaopenssl/asn1.h>
+# include <personaopenssl/bio.h>
+# include <personaopenssl/e_os2.h>
 
-# include <openssl/symhacks.h>
-# include <openssl/ossl_typ.h>
-# include <openssl/pkcs7err.h>
+# include <personaopenssl/symhacks.h>
+# include <personaopenssl/ossl_typ.h>
+# include <personaopenssl/pkcs7err.h>
 
 #ifdef  __cplusplus
 extern "C" {

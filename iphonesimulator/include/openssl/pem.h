@@ -10,12 +10,12 @@
 #ifndef HEADER_PEM_H
 # define HEADER_PEM_H
 
-# include <openssl/e_os2.h>
-# include <openssl/bio.h>
-# include <openssl/safestack.h>
-# include <openssl/evp.h>
-# include <openssl/x509.h>
-# include <openssl/pemerr.h>
+# include <personaopenssl/e_os2.h>
+# include <personaopenssl/bio.h>
+# include <personaopenssl/safestack.h>
+# include <personaopenssl/evp.h>
+# include <personaopenssl/x509.h>
+# include <personaopenssl/pemerr.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -285,7 +285,7 @@ int PEM_def_callback(char *buf, int num, int rwflag, void *userdata);
 void PEM_proc_type(char *buf, int type);
 void PEM_dek_info(char *buf, const char *type, int len, char *str);
 
-# include <openssl/symhacks.h>
+# include <personaopenssl/symhacks.h>
 
 DECLARE_PEM_rw(X509, X509)
 DECLARE_PEM_rw(X509_AUX, X509)

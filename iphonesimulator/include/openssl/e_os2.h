@@ -10,7 +10,7 @@
 #ifndef HEADER_E_OS2_H
 # define HEADER_E_OS2_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 #ifdef  __cplusplus
 extern "C" {

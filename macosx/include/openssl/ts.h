@@ -10,25 +10,25 @@
 #ifndef HEADER_TS_H
 # define HEADER_TS_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # ifndef OPENSSL_NO_TS
-# include <openssl/symhacks.h>
-# include <openssl/buffer.h>
-# include <openssl/evp.h>
-# include <openssl/bio.h>
-# include <openssl/asn1.h>
-# include <openssl/safestack.h>
-# include <openssl/rsa.h>
-# include <openssl/dsa.h>
-# include <openssl/dh.h>
-# include <openssl/tserr.h>
+# include <personaopenssl/symhacks.h>
+# include <personaopenssl/buffer.h>
+# include <personaopenssl/evp.h>
+# include <personaopenssl/bio.h>
+# include <personaopenssl/asn1.h>
+# include <personaopenssl/safestack.h>
+# include <personaopenssl/rsa.h>
+# include <personaopenssl/dsa.h>
+# include <personaopenssl/dh.h>
+# include <personaopenssl/tserr.h>
 # ifdef  __cplusplus
 extern "C" {
 # endif
 
-# include <openssl/x509.h>
-# include <openssl/x509v3.h>
+# include <personaopenssl/x509.h>
+# include <personaopenssl/x509v3.h>
 
 typedef struct TS_msg_imprint_st TS_MSG_IMPRINT;
 typedef struct TS_req_st TS_REQ;

@@ -10,12 +10,12 @@
 #ifndef HEADER_CMS_H
 # define HEADER_CMS_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # ifndef OPENSSL_NO_CMS
-# include <openssl/x509.h>
-# include <openssl/x509v3.h>
-# include <openssl/cmserr.h>
+# include <personaopenssl/x509.h>
+# include <personaopenssl/x509v3.h>
+# include <personaopenssl/cmserr.h>
 # ifdef __cplusplus
 extern "C" {
 # endif

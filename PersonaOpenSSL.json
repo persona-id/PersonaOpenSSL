@@ -1,0 +1,4 @@
+{
+  "1.0.0": "https://github.com/persona-id/PersonaOpenSSL/releases/download/1.0.0/OpenSSL.xcframework.zip",
+  "2.0.0": "https://github.com/persona-id/PersonaOpenSSL/releases/download/2.0.0/PersonaOpenSSL.xcframework.zip"
+}

@@ -11,8 +11,8 @@
 # define HEADER_ASN1T_H
 
 # include <stddef.h>
-# include <openssl/e_os2.h>
-# include <openssl/asn1.h>
+# include <personaopenssl/e_os2.h>
+# include <personaopenssl/asn1.h>
 
 # ifdef OPENSSL_BUILD_SHLIBCRYPTO
 #  undef OPENSSL_EXTERN

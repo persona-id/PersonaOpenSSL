@@ -10,7 +10,7 @@
 #ifndef HEADER_OCSP_H
 # define HEADER_OCSP_H
 
-#include <openssl/opensslconf.h>
+#include <personaopenssl/opensslconf.h>
 
 /*
  * These definitions are outside the OPENSSL_NO_OCSP guard because although for
@@ -41,11 +41,11 @@
 
 # ifndef OPENSSL_NO_OCSP
 
-#  include <openssl/ossl_typ.h>
-#  include <openssl/x509.h>
-#  include <openssl/x509v3.h>
-#  include <openssl/safestack.h>
-#  include <openssl/ocsperr.h>
+#  include <personaopenssl/ossl_typ.h>
+#  include <personaopenssl/x509.h>
+#  include <personaopenssl/x509v3.h>
+#  include <personaopenssl/safestack.h>
+#  include <personaopenssl/ocsperr.h>
 
 #ifdef  __cplusplus
 extern "C" {

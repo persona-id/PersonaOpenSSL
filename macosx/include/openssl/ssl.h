@@ -12,24 +12,24 @@
 #ifndef HEADER_SSL_H
 # define HEADER_SSL_H
 
-# include <openssl/e_os2.h>
-# include <openssl/opensslconf.h>
-# include <openssl/comp.h>
-# include <openssl/bio.h>
+# include <personaopenssl/e_os2.h>
+# include <personaopenssl/opensslconf.h>
+# include <personaopenssl/comp.h>
+# include <personaopenssl/bio.h>
 # if OPENSSL_API_COMPAT < 0x10100000L
-#  include <openssl/x509.h>
-#  include <openssl/crypto.h>
-#  include <openssl/buffer.h>
+#  include <personaopenssl/x509.h>
+#  include <personaopenssl/crypto.h>
+#  include <personaopenssl/buffer.h>
 # endif
-# include <openssl/lhash.h>
-# include <openssl/pem.h>
-# include <openssl/hmac.h>
-# include <openssl/async.h>
+# include <personaopenssl/lhash.h>
+# include <personaopenssl/pem.h>
+# include <personaopenssl/hmac.h>
+# include <personaopenssl/async.h>
 
-# include <openssl/safestack.h>
-# include <openssl/symhacks.h>
-# include <openssl/ct.h>
-# include <openssl/sslerr.h>
+# include <personaopenssl/safestack.h>
+# include <personaopenssl/symhacks.h>
+# include <personaopenssl/ct.h>
+# include <personaopenssl/sslerr.h>
 
 #ifdef  __cplusplus
 extern "C" {
@@ -941,11 +941,11 @@ uint32_t SSL_get_recv_max_early_data(const SSL *s);
 }
 #endif
 
-# include <openssl/ssl2.h>
-# include <openssl/ssl3.h>
-# include <openssl/tls1.h>      /* This is mostly sslv3 with a few tweaks */
-# include <openssl/dtls1.h>     /* Datagram TLS */
-# include <openssl/srtp.h>      /* Support for the use_srtp extension */
+# include <personaopenssl/ssl2.h>
+# include <personaopenssl/ssl3.h>
+# include <personaopenssl/tls1.h>      /* This is mostly sslv3 with a few tweaks */
+# include <personaopenssl/dtls1.h>     /* Datagram TLS */
+# include <personaopenssl/srtp.h>      /* Support for the use_srtp extension */
 
 #ifdef  __cplusplus
 extern "C" {

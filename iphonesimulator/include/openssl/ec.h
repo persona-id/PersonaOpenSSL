@@ -11,15 +11,15 @@
 #ifndef HEADER_EC_H
 # define HEADER_EC_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # ifndef OPENSSL_NO_EC
-# include <openssl/asn1.h>
-# include <openssl/symhacks.h>
+# include <personaopenssl/asn1.h>
+# include <personaopenssl/symhacks.h>
 # if OPENSSL_API_COMPAT < 0x10100000L
-#  include <openssl/bn.h>
+#  include <personaopenssl/bn.h>
 # endif
-# include <openssl/ecerr.h>
+# include <personaopenssl/ecerr.h>
 # ifdef  __cplusplus
 extern "C" {
 # endif

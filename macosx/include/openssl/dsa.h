@@ -10,21 +10,21 @@
 #ifndef HEADER_DSA_H
 # define HEADER_DSA_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # ifndef OPENSSL_NO_DSA
 # ifdef  __cplusplus
 extern "C" {
 # endif
-# include <openssl/e_os2.h>
-# include <openssl/bio.h>
-# include <openssl/crypto.h>
-# include <openssl/ossl_typ.h>
-# include <openssl/bn.h>
+# include <personaopenssl/e_os2.h>
+# include <personaopenssl/bio.h>
+# include <personaopenssl/crypto.h>
+# include <personaopenssl/ossl_typ.h>
+# include <personaopenssl/bn.h>
 # if OPENSSL_API_COMPAT < 0x10100000L
-#  include <openssl/dh.h>
+#  include <personaopenssl/dh.h>
 # endif
-# include <openssl/dsaerr.h>
+# include <personaopenssl/dsaerr.h>
 
 # ifndef OPENSSL_DSA_MAX_MODULUS_BITS
 #  define OPENSSL_DSA_MAX_MODULUS_BITS   10000

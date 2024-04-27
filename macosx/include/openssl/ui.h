@@ -10,15 +10,15 @@
 #ifndef HEADER_UI_H
 # define HEADER_UI_H
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # if OPENSSL_API_COMPAT < 0x10100000L
-#  include <openssl/crypto.h>
+#  include <personaopenssl/crypto.h>
 # endif
-# include <openssl/safestack.h>
-# include <openssl/pem.h>
-# include <openssl/ossl_typ.h>
-# include <openssl/uierr.h>
+# include <personaopenssl/safestack.h>
+# include <personaopenssl/pem.h>
+# include <personaopenssl/ossl_typ.h>
+# include <personaopenssl/uierr.h>
 
 /* For compatibility reasons, the macro OPENSSL_NO_UI is currently retained */
 # if OPENSSL_API_COMPAT < 0x10200000L

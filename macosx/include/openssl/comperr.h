@@ -12,10 +12,10 @@
 # define HEADER_COMPERR_H
 
 # ifndef HEADER_SYMHACKS_H
-#  include <openssl/symhacks.h>
+#  include <personaopenssl/symhacks.h>
 # endif
 
-# include <openssl/opensslconf.h>
+# include <personaopenssl/opensslconf.h>
 
 # ifndef OPENSSL_NO_COMP
 
