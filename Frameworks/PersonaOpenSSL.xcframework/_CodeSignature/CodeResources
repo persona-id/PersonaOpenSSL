@@ -4,6 +4,10 @@
 <dict>
 	<key>files</key>
 	<dict>
+		<key>.DS_Store</key>
+		<data>
+		3y++sUAKzaCQmjLBz2v0kvESHgc=
+		</data>
 		<key>ios-arm64/PersonaOpenSSL.framework/Headers/PersonaOpenSSL.h</key>
 		<data>
 		aNzVzzvlCi+Qtjc1YGZPDxyLZuA=
@@ -426,7 +430,7 @@
 		</data>
 		<key>ios-arm64/PersonaOpenSSL.framework/Info.plist</key>
 		<data>
-		sMfayLZawJFHLx9YdrxPQ0mHvGM=
+		lOzsJ+u0b30LuNyO+9zXlqm/9qM=
 		</data>
 		<key>ios-arm64/PersonaOpenSSL.framework/Modules/module.modulemap</key>
 		<data>
@@ -878,7 +882,7 @@
 		</data>
 		<key>ios-arm64_x86_64-maccatalyst/PersonaOpenSSL.framework/Versions/A/Resources/Info.plist</key>
 		<data>
-		3WM58Uqy5/NyJNV4rbvw2i31GEY=
+		8JPS+Rj4ahqLaENrpXnAWrUwPn8=
 		</data>
 		<key>ios-arm64_x86_64-maccatalyst/PersonaOpenSSL.framework/Versions/A/Resources/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -1310,7 +1314,7 @@
 		</data>
 		<key>ios-arm64_x86_64-simulator/PersonaOpenSSL.framework/Info.plist</key>
 		<data>
-		cjMRMngk/cD0QDY9ujO4Btw9niE=
+		0NmTfvLnZ9tYDon5MD/nI32S20Y=
 		</data>
 		<key>ios-arm64_x86_64-simulator/PersonaOpenSSL.framework/Modules/module.modulemap</key>
 		<data>
@@ -1758,7 +1762,7 @@
 		</data>
 		<key>macos-arm64_x86_64/PersonaOpenSSL.framework/Versions/A/Resources/Info.plist</key>
 		<data>
-		9OyGHFmszQaVhAlYBoA8NXFYTrQ=
+		w2iDnjb3wUYLgC/+D9Zrse4SeHc=
 		</data>
 		<key>macos-arm64_x86_64/PersonaOpenSSL.framework/Versions/A/Resources/PrivacyInfo.xcprivacy</key>
 		<data>
@@ -2930,11 +2934,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			sMfayLZawJFHLx9YdrxPQ0mHvGM=
+			lOzsJ+u0b30LuNyO+9zXlqm/9qM=
 			</data>
 			<key>hash2</key>
 			<data>
-			DT1vL24cj87yEYa1N7EcnnAhtA9jU3vRHELV8/qelfo=
+			j+JXmr5ZlcXl1QSA8FECa2yB4VuQshTjmiOHdDUQfOA=
 			</data>
 		</dict>
 		<key>ios-arm64/PersonaOpenSSL.framework/Modules/module.modulemap</key>
@@ -4193,11 +4197,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			3WM58Uqy5/NyJNV4rbvw2i31GEY=
+			8JPS+Rj4ahqLaENrpXnAWrUwPn8=
 			</data>
 			<key>hash2</key>
 			<data>
-			0VZzf4KmPwywzYL3WyeiXCFDp1W5wvfJUz7uN4x13us=
+			iiwps2mrHyoiLOKvvn1kpwD7CWEkGmZnEIzOSCp94v4=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-maccatalyst/PersonaOpenSSL.framework/Versions/A/Resources/PrivacyInfo.xcprivacy</key>
@@ -5386,11 +5390,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			cjMRMngk/cD0QDY9ujO4Btw9niE=
+			0NmTfvLnZ9tYDon5MD/nI32S20Y=
 			</data>
 			<key>hash2</key>
 			<data>
-			vgZLoVJ7XGz9unLs5k0au91ZLib0teYUxHuI6607jLw=
+			yiIcVJuSRUovkBBDzSL8zA2rMoXy74QZhqHzv6T/pfE=
 			</data>
 		</dict>
 		<key>ios-arm64_x86_64-simulator/PersonaOpenSSL.framework/Modules/module.modulemap</key>
@@ -6638,11 +6642,11 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			9OyGHFmszQaVhAlYBoA8NXFYTrQ=
+			w2iDnjb3wUYLgC/+D9Zrse4SeHc=
 			</data>
 			<key>hash2</key>
 			<data>
-			lqx0Y8Z48uVt0ryZPGAr93aP9hwxQyIUx7PYzcv1qOg=
+			L/kRnS1XGRsF3sqXZndyIjHMAlNZg16mwAcJ+4+vSaM=
 			</data>
 		</dict>
 		<key>macos-arm64_x86_64/PersonaOpenSSL.framework/Versions/A/Resources/PrivacyInfo.xcprivacy</key>
