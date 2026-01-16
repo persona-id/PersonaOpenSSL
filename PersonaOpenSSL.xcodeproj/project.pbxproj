@@ -435,9 +435,7 @@
 		75B05BBB256E7C0000FB91E0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BB9256E7C0000FB91E0 /* libcrypto.a */; };
 		75B05BBC256E7C0000FB91E0 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BBA256E7C0000FB91E0 /* libssl.a */; };
 		75B05BBF256E7C2900FB91E0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BBD256E7C1E00FB91E0 /* libcrypto.a */; };
-		75B05BC0256E7C2900FB91E0 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BBE256E7C1E00FB91E0 /* libssl.a */; };
 		75B05BC3256E7C3D00FB91E0 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BC1256E7C3D00FB91E0 /* libcrypto.a */; };
-		75B05BC4256E7C3D00FB91E0 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 75B05BC2256E7C3D00FB91E0 /* libssl.a */; };
 		75B05C00256E801E00FB91E0 /* PersonaOpenSSL.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05BFF256E801D00FB91E0 /* PersonaOpenSSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		75B05C05256E802C00FB91E0 /* PersonaOpenSSL.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05C04256E802C00FB91E0 /* PersonaOpenSSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		75B05C17256E826800FB91E0 /* PersonaOpenSSL.h in Headers */ = {isa = PBXBuildFile; fileRef = 75B05C16256E826800FB91E0 /* PersonaOpenSSL.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -797,7 +795,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				75B05BC0256E7C2900FB91E0 /* libssl.a in Frameworks */,
 				75B05BBF256E7C2900FB91E0 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -807,7 +804,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				75B05BC3256E7C3D00FB91E0 /* libcrypto.a in Frameworks */,
-				75B05BC4256E7C3D00FB91E0 /* libssl.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2107,7 +2103,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/support/iphonesimulator/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2186,7 +2182,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/support/iphonesimulator/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2291,7 +2287,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/support/ios/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2376,7 +2372,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/support/ios/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
