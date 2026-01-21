@@ -58,6 +58,8 @@ OPENSSL_DISABLED_FEATURES=(
    no-chacha       # ChaCha20 cipher - not in ICAO spec
    no-aria         # ARIA cipher - Korean standard, not used
    no-blake2       # BLAKE2 hash - not in ICAO spec
+   no-dsa          # DSA signatures - not used, only RSA and ECDSA needed
+   no-ui           # User interface helpers - not needed (safe: only for password prompts)
 )
 
 # Turn versions like 1.2.3 into numbers that can be compare by bash.
@@ -187,6 +189,12 @@ build_ios() {
    echo "#if defined(__APPLE__) && defined (__arm64__)" > ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#endif" >> ${OPENSSLCONF_PATH}
+
+   # fix include paths from <openssl/...> to <personaopenssl/...> to match framework name
+   # Run this ONCE after all headers (including opensslconf.h) are generated
+   echo "Fixing header include paths to use personaopenssl..."
+   find "${SCRIPT_DIR}/../iphoneos/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
+   find "${SCRIPT_DIR}/../iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
 
    rm -rf ${TMP_BUILD_DIR}
 }
