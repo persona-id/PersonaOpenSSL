@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "Persona-OpenSSL-Universal"
-  s.version      = "2.0.1"
+  s.version      = "2.0.2"
   s.summary      = "OpenSSL for iOS and OS X"
   s.description  = "OpenSSL is an SSL/TLS and Crypto toolkit. Deprecated in Mac OS and gone in iOS, this spec gives your project non-deprecated OpenSSL support. Supports OSX and iOS including Simulator (armv7,armv7s,arm64,x86_64)."
   s.homepage     = "https://github.com/persona-id/PersonaOpenSSL"
@@ -26,7 +26,6 @@ Pod::Spec.new do |s|
                    
   s.requires_arc = true
   s.cocoapods_version = '>= 1.9'
-  s.ios.deployment_target = '9.0'
-  s.osx.deployment_target = '10.13'
+  s.ios.deployment_target = '13.0'
   s.vendored_frameworks = 'Frameworks/PersonaOpenSSL.xcframework'
 end

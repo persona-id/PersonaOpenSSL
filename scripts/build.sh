@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Yay shell scripting! This script builds a static version of
-# OpenSSL for iOS and OSX that contains code for armv6, armv7, armv7s, arm64, x86_64.
+# OpenSSL for iOS that contains code for arm64 and x86_64.
 
 set -e
 # set -x
@@ -21,12 +21,46 @@ export OPENSSL_LOCAL_CONFIG_DIR="${SCRIPT_DIR}/../config"
 
 DEVELOPER=$(xcode-select --print-path)
 
-export IPHONEOS_DEPLOYMENT_VERSION="7.0"
+export IPHONEOS_DEPLOYMENT_VERSION="13.0"
 IPHONEOS_SDK=$(xcrun --sdk iphoneos --show-sdk-path)
 IPHONESIMULATOR_SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
-OSX_SDK=$(xcrun --sdk macosx --show-sdk-path)
 
-export MACOSX_DEPLOYMENT_TARGET="10.10" # 
+# Disabled OpenSSL features
+OPENSSL_DISABLED_FEATURES=(
+   no-ssl          # SSL protocol - not used, only crypto primitives needed
+   no-tls          # TLS protocol - not used for NFC
+   no-dtls         # DTLS protocol - not used for NFC
+   no-bf           # Blowfish cipher - passport uses AES/3DES only
+   no-camellia     # Camellia cipher - not in ICAO spec
+   no-cast         # CAST cipher - not in ICAO spec
+   no-idea         # IDEA cipher - not in ICAO spec
+   no-md2          # MD2 hash - obsolete, not used
+   no-md4          # MD4 hash - obsolete, not used
+   no-mdc2         # MDC2 hash - obsolete, not used
+   no-rc2          # RC2 cipher - not in ICAO spec
+   no-rc4          # RC4 cipher - not in ICAO spec
+   no-rc5          # RC5 cipher - not in ICAO spec
+   no-seed         # SEED cipher - Korean standard, not used
+   no-whirlpool    # Whirlpool hash - not in ICAO spec
+   no-ocsp         # OCSP - online cert checking not needed
+   no-srp          # SRP - password auth protocol not used
+   no-ct           # Certificate Transparency - not needed
+   no-comp         # Compression - not used in passport protocol
+   no-ts           # Timestamp - not needed
+   no-gost         # GOST - Russian algorithms not in ICAO spec
+   no-scrypt       # scrypt KDF - not used, custom KDF in PACE
+   no-sm2          # SM2 - Chinese algorithm not in ICAO spec
+   no-sm3          # SM3 - Chinese hash not in ICAO spec
+   no-sm4          # SM4 - Chinese cipher not in ICAO spec
+   no-srtp         # SRTP - media encryption not needed
+   no-siphash      # SipHash - not in ICAO spec
+   no-poly1305     # Poly1305 MAC - not in ICAO spec
+   no-chacha       # ChaCha20 cipher - not in ICAO spec
+   no-aria         # ARIA cipher - Korean standard, not used
+   no-blake2       # BLAKE2 hash - not in ICAO spec
+   no-dsa          # DSA signatures - not used, only RSA and ECDSA needed
+   no-ui           # User interface helpers - not needed (safe: only for password prompts)
+)
 
 # Turn versions like 1.2.3 into numbers that can be compare by bash.
 version()
@@ -50,12 +84,6 @@ configure() {
       iPhoneSimulator)
 	 SDK="${IPHONESIMULATOR_SDK}"
 	 ;;
-      MacOSX)
-	 SDK="${OSX_SDK}"
-	 ;;
-      MacOSX_Catalyst)
-	 SDK="${OSX_SDK}"
-	 ;;
       *)
 	 echo "Unsupported OS '${OS}'!" >&1
 	 exit 1
@@ -70,16 +98,11 @@ configure() {
       echo "Failed to parse SDK path '${SDK}'!" >&1
       exit 2
    fi
-   
 
-   if [ "$OS" == "MacOSX" ]; then
-      ${SRC_DIR}/Configure macos-$ARCH no-asm no-shared --prefix="${PREFIX}" &> "${PREFIX}.config.log"
-   elif [ "$OS" == "MacOSX_Catalyst" ]; then
-      ${SRC_DIR}/Configure mac-catalyst-$ARCH no-asm no-shared --prefix="${PREFIX}" &> "${PREFIX}.config.log"
-   elif [ "$OS" == "iPhoneSimulator" ]; then
-      ${SRC_DIR}/Configure ios-sim-cross-$ARCH no-asm no-shared --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+   if [ "$OS" == "iPhoneSimulator" ]; then
+      ${SRC_DIR}/Configure ios-sim-cross-$ARCH no-asm no-shared ${OPENSSL_DISABLED_FEATURES[@]} --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    elif [ "$OS" == "iPhoneOS" ]; then
-      ${SRC_DIR}/Configure ios-cross-$ARCH no-asm no-shared --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+      ${SRC_DIR}/Configure ios-cross-$ARCH no-asm no-shared ${OPENSSL_DISABLED_FEATURES[@]} --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    fi
 }
 
@@ -88,7 +111,7 @@ build()
    local ARCH=$1
    local OS=$2
    local BUILD_DIR=$3
-   local TYPE=$4 # iphoneos/iphonesimulator/macosx/macosx_catalyst
+   local TYPE=$4 # iphoneos/iphonesimulator
 
    local SRC_DIR="${BUILD_DIR}/openssl-${OPENSSL_VERSION}-${TYPE}"
    local PREFIX="${BUILD_DIR}/${OPENSSL_VERSION}-${OS}-${ARCH}"
@@ -119,13 +142,11 @@ build()
    make install &> ${LOG_PATH}
    cd ${BASE_PWD}
 
-   # Add arch to library
+   # Add arch to library (only libcrypto.a - libssl.a not needed for NFC passport reader)
    if [ -f "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" ]; then
       xcrun lipo "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" "${PREFIX}/lib/libcrypto.a" -create -output "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a"
-      xcrun lipo "${SCRIPT_DIR}/../${TYPE}/lib/libssl.a" "${PREFIX}/lib/libssl.a" -create -output "${SCRIPT_DIR}/../${TYPE}/lib/libssl.a"
    else
       cp "${PREFIX}/lib/libcrypto.a" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a"
-      cp "${PREFIX}/lib/libssl.a" "${SCRIPT_DIR}/../${TYPE}/lib/libssl.a"
    fi
 
    rm -rf "${SRC_DIR}"
@@ -138,22 +159,13 @@ build_ios() {
    rm -rf "${SCRIPT_DIR}"/../{iphonesimulator/include,iphonesimulator/lib}
    mkdir -p "${SCRIPT_DIR}"/../{iphonesimulator/include,iphonesimulator/lib}
 
-   build "i386" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
    build "x86_64" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
    build "arm64" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
-
-   # The World is not ready for arm64e!
-   # build "arm64e" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
 
    rm -rf "${SCRIPT_DIR}"/../{iphoneos/include,iphoneos/lib}
    mkdir -p "${SCRIPT_DIR}"/../{iphoneos/include,iphoneos/lib}
 
-   build "armv7" "iPhoneOS" ${TMP_BUILD_DIR} "iphoneos"
-   build "armv7s" "iPhoneOS" ${TMP_BUILD_DIR} "iphoneos"
    build "arm64" "iPhoneOS" ${TMP_BUILD_DIR} "iphoneos"
-
-   # The World is not ready for arm64e!
-   # build "arm64e" "iPhoneOS" ${TMP_BUILD_DIR} "iphoneos"
 
    ditto "${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl" "${SCRIPT_DIR}/../iphoneos/include/openssl"
    cp -f "${SCRIPT_DIR}/../shim/shim.h" "${SCRIPT_DIR}/../iphoneos/include/openssl/shim.h"
@@ -167,101 +179,22 @@ build_ios() {
    find "${SCRIPT_DIR}/../iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/include <inttypes\.h>/include <sys\/types\.h>/g" {} \;
 
    local OPENSSLCONF_PATH="${SCRIPT_DIR}/../iphonesimulator/include/openssl/opensslconf.h"
-   echo "#if defined(__APPLE__) && defined (__i386__)" > ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-i386/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__x86_64__)" >> ${OPENSSLCONF_PATH}
+   echo "#if defined(__APPLE__) && defined (__x86_64__)" > ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-x86_64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7A__)" >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7S__)" >> ${OPENSSLCONF_PATH}
-   # The World is not ready for arm64e!
-   # echo "#elif defined(__APPLE__) && defined (__arm64e__)" >> ${OPENSSLCONF_PATH}
-   # cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-arm64e/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#elif defined(__APPLE__) && defined (__arm64__)" >> ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#endif" >> ${OPENSSLCONF_PATH}
 
    OPENSSLCONF_PATH="${SCRIPT_DIR}/../iphoneos/include/openssl/opensslconf.h"
-   echo "#if defined(__APPLE__) && defined (__i386__)" > ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__x86_64__)" >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7A__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-armv7/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7S__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-armv7s/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   # The World is not ready for arm64e!
-   # echo "#elif defined(__APPLE__) && defined (__arm64e__)" >> ${OPENSSLCONF_PATH}
-   # cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64e/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm64__)" >> ${OPENSSLCONF_PATH}
+   echo "#if defined(__APPLE__) && defined (__arm64__)" > ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#endif" >> ${OPENSSLCONF_PATH}
 
-   rm -rf ${TMP_BUILD_DIR}
-}
-
-build_macos() {
-   local TMP_BUILD_DIR=$( mktemp -d )
-
-   # Clean up whatever was left from our previous build
-   rm -rf "${SCRIPT_DIR}"/../{macosx/include,macosx/lib}
-   mkdir -p "${SCRIPT_DIR}"/../{macosx/include,macosx/lib}
-
-   build "x86_64" "MacOSX" ${TMP_BUILD_DIR} "macosx"
-   build "arm64" "MacOSX" ${TMP_BUILD_DIR} "macosx"
-   # The World is not ready for arm64e!
-   # build "arm64e" "MacOSX" ${TMP_BUILD_DIR} "macosx"
-
-   # Copy headers
-   ditto ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX-x86_64/include/openssl "${SCRIPT_DIR}/../macosx/include/openssl"
-   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${SCRIPT_DIR}/../macosx/include/openssl/shim.h"
-
-   # fix inttypes.h
-   find "${SCRIPT_DIR}/../macosx/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/include <inttypes\.h>/include <sys\/types\.h>/g" {} \;
-
-   local OPENSSLCONF_PATH="${SCRIPT_DIR}/../macosx/include/openssl/opensslconf.h"
-   echo "#if defined(__APPLE__) && defined (__i386__)" > ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__x86_64__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX-x86_64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7A__)" >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7S__)" >> ${OPENSSLCONF_PATH}
-   # The World is not ready for arm64e!
-   # echo "#elif defined(__APPLE__) && defined (__arm64e__)" >> ${OPENSSLCONF_PATH}
-   # cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX-arm64e/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm64__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#endif" >> ${OPENSSLCONF_PATH}
-
-   rm -rf ${TMP_BUILD_DIR}
-}
-
-build_catalyst() {
-   local TMP_BUILD_DIR=$( mktemp -d )
-
-   # Clean up whatever was left from our previous build
-   rm -rf "${SCRIPT_DIR}"/../{macosx_catalyst/include,macosx_catalyst/lib}
-   mkdir -p "${SCRIPT_DIR}"/../{macosx_catalyst/include,macosx_catalyst/lib}
-
-   build "x86_64" "MacOSX_Catalyst" ${TMP_BUILD_DIR} "macosx_catalyst"
-   build "arm64" "MacOSX_Catalyst" ${TMP_BUILD_DIR} "macosx_catalyst"
-   # build "arm64e" "MacOSX_Catalyst" ${TMP_BUILD_DIR} "macosx_catalyst"
-
-   # Copy headers
-   ditto ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX_Catalyst-x86_64/include/openssl "${SCRIPT_DIR}/../macosx_catalyst/include/openssl"
-   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${SCRIPT_DIR}/../macosx_catalyst/include/openssl/shim.h"
-
-   # fix inttypes.h
-   find "${SCRIPT_DIR}/../macosx_catalyst/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/include <inttypes\.h>/include <sys\/types\.h>/g" {} \;
-
-   # fix RC4_INT redefinition
-   # find "${SCRIPT_DIR}/../macosx/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/\#define RC4_INT unsigned char/\#if \!defined(RC4_INT)\n#define RC4_INT unsigned char\n\#endif\n/g" {} \;
-
-   local OPENSSLCONF_PATH="${SCRIPT_DIR}/../macosx_catalyst/include/openssl/opensslconf.h"
-   echo "#if defined(__APPLE__) && defined (__i386__)" > ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__x86_64__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX_Catalyst-x86_64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7A__)" >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm__) && defined (__ARM_ARCH_7S__)" >> ${OPENSSLCONF_PATH}
-   echo "#elif defined(__APPLE__) && defined (__arm64__)" >> ${OPENSSLCONF_PATH}
-   cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-MacOSX_Catalyst-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
-   echo "#endif" >> ${OPENSSLCONF_PATH}
+   # fix include paths from <openssl/...> to <personaopenssl/...> to match framework name
+   # Run this ONCE after all headers (including opensslconf.h) are generated
+   echo "Fixing header include paths to use personaopenssl..."
+   find "${SCRIPT_DIR}/../iphoneos/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
+   find "${SCRIPT_DIR}/../iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
 
    rm -rf ${TMP_BUILD_DIR}
 }
@@ -282,5 +215,3 @@ if [ ! -f "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz" ]; then
 fi
 
 build_ios
-build_macos
-build_catalyst

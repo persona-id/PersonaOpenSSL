@@ -5,8 +5,7 @@ import PackageDescription
 let package = Package(
     name: "PersonaOpenSSL",
     platforms: [
-        .iOS(.v9),
-        .macOS(.v10_10)
+        .iOS(.v13)
     ],
     products: [
         .library(

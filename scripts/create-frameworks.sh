@@ -18,32 +18,6 @@ FWNAME="PersonaOpenSSL"
 OUTPUT_DIR=$( mktemp -d )
 COMMON_SETUP=" -project ${SCRIPT_DIR}/../${FWNAME}.xcodeproj -configuration Release -quiet BUILD_LIBRARY_FOR_DISTRIBUTION=YES $XC_USER_DEFINED_VARS"
 
-# macOS
-DERIVED_DATA_PATH=$( mktemp -d )
-xcrun xcodebuild build \
-	$COMMON_SETUP \
-    -scheme "${FWNAME} (macOS)" \
-	-derivedDataPath "${DERIVED_DATA_PATH}" \
-	-destination 'generic/platform=macOS'
-
-mkdir -p "${OUTPUT_DIR}/macosx"
-rm -rf "${OUTPUT_DIR}/macosx/${FWNAME}.framework"
-ditto "${DERIVED_DATA_PATH}/Build/Products/Release/${FWNAME}.framework" "${OUTPUT_DIR}/macosx/${FWNAME}.framework"
-rm -rf "${DERIVED_DATA_PATH}"
-
-# macOS Catalyst
-DERIVED_DATA_PATH=$( mktemp -d )
-xcrun xcodebuild build \
-	$COMMON_SETUP \
-    -scheme "${FWNAME} (Catalyst)" \
-	-derivedDataPath "${DERIVED_DATA_PATH}" \
-	-destination 'generic/platform=macOS,variant=Mac Catalyst'
-
-mkdir -p "${OUTPUT_DIR}/macosx_catalyst"
-rm -rf "${OUTPUT_DIR}/macosx_catalyst/${FWNAME}.framework"
-ditto "${DERIVED_DATA_PATH}/Build/Products/Release-maccatalyst/${FWNAME}.framework" "${OUTPUT_DIR}/macosx_catalyst/${FWNAME}.framework"
-rm -rf "${DERIVED_DATA_PATH}"
-
 # iOS
 DERIVED_DATA_PATH=$( mktemp -d )
 xcrun xcodebuild build \
@@ -80,23 +54,42 @@ rm -rf "${BASE_PWD}/Frameworks/iphonesimulator"
 mkdir -p "${BASE_PWD}/Frameworks/iphonesimulator"
 ditto "${OUTPUT_DIR}/iphonesimulator/${FWNAME}.framework" "${BASE_PWD}/Frameworks/iphonesimulator/${FWNAME}.framework"
 
-rm -rf "${BASE_PWD}/Frameworks/macosx"
-mkdir -p "${BASE_PWD}/Frameworks/macosx"
-ditto "${OUTPUT_DIR}/macosx/${FWNAME}.framework" "${BASE_PWD}/Frameworks/macosx/${FWNAME}.framework"
-
-rm -rf "${BASE_PWD}/Frameworks/macosx_catalyst"
-mkdir -p "${BASE_PWD}/Frameworks/macosx_catalyst"
-ditto "${OUTPUT_DIR}/macosx_catalyst/${FWNAME}.framework" "${BASE_PWD}/Frameworks/macosx_catalyst/${FWNAME}.framework"
-
 # XCFramework
 rm -rf "${BASE_PWD}/Frameworks/${FWNAME}.xcframework"
 
 xcrun xcodebuild -quiet -create-xcframework \
 	-framework "${OUTPUT_DIR}/iphoneos/${FWNAME}.framework" \
 	-framework "${OUTPUT_DIR}/iphonesimulator/${FWNAME}.framework" \
-	-framework "${OUTPUT_DIR}/macosx/${FWNAME}.framework" \
-	-framework "${OUTPUT_DIR}/macosx_catalyst/${FWNAME}.framework" \
 	-output "${BASE_PWD}/Frameworks/${FWNAME}.xcframework"
+
+# Fix Info.plist files: Add CFBundleShortVersionString (required for App Store validation)
+echo "Adding CFBundleShortVersionString to framework Info.plist files..."
+PODSPEC_VERSION=$(grep -m 1 's.version' "${BASE_PWD}/Persona-OpenSSL-Universal.podspec" | sed 's/.*"\(.*\)".*/\1/')
+echo "Using version: ${PODSPEC_VERSION}"
+
+for INFO_PLIST in "${BASE_PWD}/Frameworks/${FWNAME}.xcframework"/*/*/Info.plist; do
+  if [ -f "$INFO_PLIST" ]; then
+    # Remove code signature if it exists (will be re-signed later)
+    FRAMEWORK_DIR=$(dirname "$INFO_PLIST")
+    if [ -d "${FRAMEWORK_DIR}/_CodeSignature" ]; then
+      echo "Removing code signature from $(basename $(dirname ${FRAMEWORK_DIR}))"
+      rm -rf "${FRAMEWORK_DIR}/_CodeSignature"
+    fi
+
+    # Add CFBundleShortVersionString if it doesn't exist
+    if ! /usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$INFO_PLIST" 2>/dev/null; then
+      echo "Adding CFBundleShortVersionString to $(basename $(dirname ${FRAMEWORK_DIR}))"
+      /usr/libexec/PlistBuddy -c "Add :CFBundleShortVersionString string ${PODSPEC_VERSION}" "$INFO_PLIST"
+    else
+      echo "CFBundleShortVersionString already exists in $(basename $(dirname ${FRAMEWORK_DIR}))"
+    fi
+  fi
+done
+
+# Re-sign the XCFramework after modifying Info.plist files
+echo "Re-signing XCFramework..."
+codesign --timestamp -v --sign "iPhone Distribution: Persona Identities, Inc. (YA49JBJSCR)" \
+  "${BASE_PWD}/Frameworks/${FWNAME}.xcframework"
 
 # Zip archive
 pushd "${BASE_PWD}/Frameworks"
