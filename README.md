@@ -48,7 +48,7 @@ Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integrat
 
 ```
 dependencies: [
-    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", .upToNextMinor(from: "2.0.0"))
+    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", exact: "3.5.8000")
 ]
 ```
 
@@ -69,4 +69,3 @@ These libraries work for both iOS and macOS. It is your prerogative to check. As
 #### What is XCFramework?
 
 OpenSSL.xcframework is distributed as a multiplatform XCFramework bundle, for mor information chekout the documentation [Distributing Binary Frameworks as Swift Packages](https://developer.apple.com/documentation/xcode/distributing-binary-frameworks-as-swift-packages)
-

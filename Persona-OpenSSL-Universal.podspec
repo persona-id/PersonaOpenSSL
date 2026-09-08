@@ -1,11 +1,11 @@
 Pod::Spec.new do |s|
   s.name         = "Persona-OpenSSL-Universal"
-  s.version      = "2.0.2"
+  s.version      = "3.5.8000" # OpenSSL 3.5.8
   s.summary      = "OpenSSL for iOS and OS X"
   s.description  = "OpenSSL is an SSL/TLS and Crypto toolkit. Deprecated in Mac OS and gone in iOS, this spec gives your project non-deprecated OpenSSL support. Supports OSX and iOS including Simulator (armv7,armv7s,arm64,x86_64)."
   s.homepage     = "https://github.com/persona-id/PersonaOpenSSL"
-  s.license	     = { :type => 'OpenSSL (OpenSSL/SSLeay)', :file => 'LICENSE.txt' }
-  s.source       = { :http => "https://github.com/persona-id/PersonaOpenSSL/archive/#{s.version}.zip", :type => "zip", :flatten => true }
+  s.license	     = { :type => 'Apache-2.0', :file => 'LICENSE.txt' }
+  s.source       = { :http => "https://github.com/persona-id/PersonaOpenSSL/releases/download/#{s.version}/PersonaOpenSSL.xcframework.zip" }
 
   s.authors       =  {'Mark J. Cox' => 'mark@openssl.org',
                      'Ralf S. Engelschall' => 'rse@openssl.org',
