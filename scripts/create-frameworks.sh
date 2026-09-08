@@ -7,6 +7,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 FWNAME="PersonaOpenSSL"
 OPENSSL_VERSION=${OPENSSL_VERSION:-3.5.8}
 OUTPUT_DIR=$( mktemp -d )
+# Keep the dynamic ABI limited to the OpenSSL entry points consumed by PersonaNfc.
+# The linker treats this list as roots and can dead-strip the remaining archive code.
+EXPORTED_SYMBOLS_LIST="${SCRIPT_DIR}/../config/PersonaOpenSSL.exports"
 IPHONEOS_SDK=$(xcrun --sdk iphoneos --show-sdk-path)
 IPHONESIMULATOR_SDK=$(xcrun --sdk iphonesimulator --show-sdk-path)
 PERSONA_CODE_SIGN_IDENTITY=${PERSONA_CODE_SIGN_IDENTITY:--}
@@ -32,18 +35,21 @@ create_framework() {
   mkdir -p "${FRAMEWORK_DIR}/Headers" "${FRAMEWORK_DIR}/Modules"
   if [[ "${TYPE}" == "iphoneos" ]]; then
     xcrun clang -dynamiclib -arch arm64 -isysroot "${IPHONEOS_SDK}" \
-      -mios-version-min=13.0 -Wl,-all_load "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
+      -mios-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
       -o "${FRAMEWORK_DIR}/${FWNAME}"
   else
     xcrun clang -dynamiclib -arch arm64 -isysroot "${IPHONESIMULATOR_SDK}" \
-      -mios-simulator-version-min=13.0 -Wl,-all_load "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
+      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
       -o "${OUTPUT_DIR}/${FWNAME}-sim-arm64"
     xcrun clang -dynamiclib -arch x86_64 -isysroot "${IPHONESIMULATOR_SDK}" \
-      -mios-simulator-version-min=13.0 -Wl,-all_load "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
+      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
       -o "${OUTPUT_DIR}/${FWNAME}-sim-x86_64"

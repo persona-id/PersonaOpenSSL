@@ -31,7 +31,7 @@ extern "C" {
 # ifndef OPENSSL_SYS_iOS
 #  define OPENSSL_SYS_iOS 1
 # endif
-# define OPENSSL_CONFIGURED_API 30500
+# define OPENSSL_CONFIGURED_API 10101
 # ifndef OPENSSL_RAND_SEED_OS
 #  define OPENSSL_RAND_SEED_OS
 # endif
@@ -43,6 +43,9 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_AFALGENG
 #  define OPENSSL_NO_AFALGENG
+# endif
+# ifndef OPENSSL_NO_APPS
+#  define OPENSSL_NO_APPS
 # endif
 # ifndef OPENSSL_NO_ARGON2
 #  define OPENSSL_NO_ARGON2
@@ -83,8 +86,14 @@ extern "C" {
 # ifndef OPENSSL_NO_CHACHA
 #  define OPENSSL_NO_CHACHA
 # endif
+# ifndef OPENSSL_NO_CMP
+#  define OPENSSL_NO_CMP
+# endif
 # ifndef OPENSSL_NO_COMP
 #  define OPENSSL_NO_COMP
+# endif
+# ifndef OPENSSL_NO_CRMF
+#  define OPENSSL_NO_CRMF
 # endif
 # ifndef OPENSSL_NO_CRYPTO_MDEBUG
 #  define OPENSSL_NO_CRYPTO_MDEBUG
@@ -100,6 +109,9 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_DEVCRYPTOENG
 #  define OPENSSL_NO_DEVCRYPTOENG
+# endif
+# ifndef OPENSSL_NO_DOCS
+#  define OPENSSL_NO_DOCS
 # endif
 # ifndef OPENSSL_NO_DSA
 #  define OPENSSL_NO_DSA
@@ -149,6 +161,9 @@ extern "C" {
 # ifndef OPENSSL_NO_HQINTEROP
 #  define OPENSSL_NO_HQINTEROP
 # endif
+# ifndef OPENSSL_NO_HTTP
+#  define OPENSSL_NO_HTTP
+# endif
 # ifndef OPENSSL_NO_IDEA
 #  define OPENSSL_NO_IDEA
 # endif
@@ -169,6 +184,12 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_MDC2
 #  define OPENSSL_NO_MDC2
+# endif
+# ifndef OPENSSL_NO_ML_DSA
+#  define OPENSSL_NO_ML_DSA
+# endif
+# ifndef OPENSSL_NO_ML_KEM
+#  define OPENSSL_NO_ML_KEM
 # endif
 # ifndef OPENSSL_NO_MSAN
 #  define OPENSSL_NO_MSAN
@@ -200,6 +221,9 @@ extern "C" {
 # ifndef OPENSSL_NO_RC5
 #  define OPENSSL_NO_RC5
 # endif
+# ifndef OPENSSL_NO_RFC3779
+#  define OPENSSL_NO_RFC3779
+# endif
 # ifndef OPENSSL_NO_SCRYPT
 #  define OPENSSL_NO_SCRYPT
 # endif
@@ -211,6 +235,9 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_SIPHASH
 #  define OPENSSL_NO_SIPHASH
+# endif
+# ifndef OPENSSL_NO_SLH_DSA
+#  define OPENSSL_NO_SLH_DSA
 # endif
 # ifndef OPENSSL_NO_SM2
 #  define OPENSSL_NO_SM2
@@ -235,6 +262,9 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_SSLKEYLOG
 #  define OPENSSL_NO_SSLKEYLOG
+# endif
+# ifndef OPENSSL_NO_TESTS
+#  define OPENSSL_NO_TESTS
 # endif
 # ifndef OPENSSL_NO_TFO
 #  define OPENSSL_NO_TFO

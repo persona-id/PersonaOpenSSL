@@ -38,6 +38,10 @@ $ make
 
 The result of a build process is put inside [Frameworks](Frameworks/) directory.
 
+The dynamic framework intentionally exports only the OpenSSL entry points listed in
+`config/PersonaOpenSSL.exports`. This surface matches PersonaNfc's passport reader;
+add any newly consumed OpenSSL entry point to that list before rebuilding the framework.
+
 ### Hardened Runtime (macOS) and Xcode
 
 Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integration) won't load properly in your app if the app uses **Sign to Run Locally**  Signing Certificate with Hardened Runtime enabled. It is possible to setup Xcode like this. To solve the problem you have two options:

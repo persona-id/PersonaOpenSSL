@@ -57,6 +57,15 @@ OPENSSL_DISABLED_FEATURES=(
    no-blake2       # BLAKE2 hash - not in ICAO spec
    no-dsa          # DSA signatures - not used, only RSA and ECDSA needed
    no-ui           # User interface helpers - not needed (safe: only for password prompts)
+   no-cmp          # Certificate Management Protocol - not used by passport NFC
+   no-http         # OpenSSL HTTP client - not used by passport NFC
+   no-ml-dsa       # Post-quantum signatures - not used by passport NFC
+   no-ml-kem       # Post-quantum key encapsulation - not used by passport NFC
+   no-slh-dsa      # Post-quantum signatures - not used by passport NFC
+   no-rfc3779      # IP address/AS identifier certificate extensions - not used
+   no-apps         # Command-line applications are not shipped
+   no-docs         # Documentation is not shipped
+   no-tests        # Test binaries are not shipped
 )
 
 # Turn versions like 1.2.3 into numbers that can be compare by bash.
@@ -97,9 +106,9 @@ configure() {
    fi
 
    if [ "$OS" == "iPhoneSimulator" ]; then
-      "${SRC_DIR}/Configure" "ios-sim-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+      "${SRC_DIR}/Configure" "ios-sim-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" --api=1.1.1 -Os --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    elif [ "$OS" == "iPhoneOS" ]; then
-      "${SRC_DIR}/Configure" "ios-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+      "${SRC_DIR}/Configure" "ios-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" --api=1.1.1 -Os --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    fi
 }
 
