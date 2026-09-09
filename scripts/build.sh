@@ -66,6 +66,17 @@ OPENSSL_DISABLED_FEATURES=(
    no-apps         # Command-line applications are not shipped
    no-docs         # Documentation is not shipped
    no-tests        # Test binaries are not shipped
+   no-ec2m         # Binary-field EC is not used by ICAO passport protocols
+   no-ecx          # X25519, X448, and EdDSA are not used by ICAO passports
+   no-rmd160       # Passport digest suites use SHA-family digests
+   no-ocb          # OCB mode is not used by passport NFC
+   no-siv          # SIV mode is not used by passport NFC
+   no-legacy       # Disabled legacy algorithms do not require the legacy provider
+   no-dso          # Providers are linked in; runtime module loading is not used
+   no-autoload-config # iOS does not ship or load an OpenSSL configuration file
+   no-sock         # Networking is outside this libcrypto-only framework
+   no-atexit       # Avoid registering process-global cleanup from a framework
+   no-secure-memory # The secure-heap API is not used by PersonaNfc
 )
 
 # Turn versions like 1.2.3 into numbers that can be compare by bash.

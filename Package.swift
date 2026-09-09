@@ -16,7 +16,7 @@ let package = Package(
         .binaryTarget(
             name: "PersonaOpenSSL",
             url: "https://github.com/persona-id/PersonaOpenSSL/releases/download/3.5.8000/PersonaOpenSSL.xcframework.zip",
-            checksum: "1daf44732e9a21c4f7f830122e1cdd56bff9b8343dc553acb7d92c9b74e28f7e"
+            checksum: "ba0607be0605fc1a4bab2c072a850030f69ece3604e2c8f82a6227ddd94d7acd"
         )
     ]
 )

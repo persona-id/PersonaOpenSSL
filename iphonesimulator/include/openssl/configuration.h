@@ -62,6 +62,12 @@ extern "C" {
 # ifndef OPENSSL_NO_ASYNC
 #  define OPENSSL_NO_ASYNC
 # endif
+# ifndef OPENSSL_NO_ATEXIT
+#  define OPENSSL_NO_ATEXIT
+# endif
+# ifndef OPENSSL_NO_AUTOLOAD_CONFIG
+#  define OPENSSL_NO_AUTOLOAD_CONFIG
+# endif
 # ifndef OPENSSL_NO_BF
 #  define OPENSSL_NO_BF
 # endif
@@ -110,11 +116,17 @@ extern "C" {
 # ifndef OPENSSL_NO_DEVCRYPTOENG
 #  define OPENSSL_NO_DEVCRYPTOENG
 # endif
+# ifndef OPENSSL_NO_DGRAM
+#  define OPENSSL_NO_DGRAM
+# endif
 # ifndef OPENSSL_NO_DOCS
 #  define OPENSSL_NO_DOCS
 # endif
 # ifndef OPENSSL_NO_DSA
 #  define OPENSSL_NO_DSA
+# endif
+# ifndef OPENSSL_NO_DSO
+#  define OPENSSL_NO_DSO
 # endif
 # ifndef OPENSSL_NO_DTLS
 #  define OPENSSL_NO_DTLS
@@ -125,8 +137,14 @@ extern "C" {
 # ifndef OPENSSL_NO_DTLS1_2
 #  define OPENSSL_NO_DTLS1_2
 # endif
+# ifndef OPENSSL_NO_EC2M
+#  define OPENSSL_NO_EC2M
+# endif
 # ifndef OPENSSL_NO_EC_NISTP_64_GCC_128
 #  define OPENSSL_NO_EC_NISTP_64_GCC_128
+# endif
+# ifndef OPENSSL_NO_ECX
+#  define OPENSSL_NO_ECX
 # endif
 # ifndef OPENSSL_NO_EGD
 #  define OPENSSL_NO_EGD
@@ -194,6 +212,9 @@ extern "C" {
 # ifndef OPENSSL_NO_MSAN
 #  define OPENSSL_NO_MSAN
 # endif
+# ifndef OPENSSL_NO_OCB
+#  define OPENSSL_NO_OCB
+# endif
 # ifndef OPENSSL_NO_OCSP
 #  define OPENSSL_NO_OCSP
 # endif
@@ -224,17 +245,26 @@ extern "C" {
 # ifndef OPENSSL_NO_RFC3779
 #  define OPENSSL_NO_RFC3779
 # endif
+# ifndef OPENSSL_NO_RMD160
+#  define OPENSSL_NO_RMD160
+# endif
 # ifndef OPENSSL_NO_SCRYPT
 #  define OPENSSL_NO_SCRYPT
 # endif
 # ifndef OPENSSL_NO_SCTP
 #  define OPENSSL_NO_SCTP
 # endif
+# ifndef OPENSSL_NO_SECURE_MEMORY
+#  define OPENSSL_NO_SECURE_MEMORY
+# endif
 # ifndef OPENSSL_NO_SEED
 #  define OPENSSL_NO_SEED
 # endif
 # ifndef OPENSSL_NO_SIPHASH
 #  define OPENSSL_NO_SIPHASH
+# endif
+# ifndef OPENSSL_NO_SIV
+#  define OPENSSL_NO_SIV
 # endif
 # ifndef OPENSSL_NO_SLH_DSA
 #  define OPENSSL_NO_SLH_DSA
@@ -247,6 +277,9 @@ extern "C" {
 # endif
 # ifndef OPENSSL_NO_SM4
 #  define OPENSSL_NO_SM4
+# endif
+# ifndef OPENSSL_NO_SOCK
+#  define OPENSSL_NO_SOCK
 # endif
 # ifndef OPENSSL_NO_SRP
 #  define OPENSSL_NO_SRP

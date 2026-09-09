@@ -35,20 +35,20 @@ create_framework() {
   mkdir -p "${FRAMEWORK_DIR}/Headers" "${FRAMEWORK_DIR}/Modules"
   if [[ "${TYPE}" == "iphoneos" ]]; then
     xcrun clang -dynamiclib -arch arm64 -isysroot "${IPHONEOS_SDK}" \
-      -mios-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -mios-version-min=13.0 -Wl,-all_load -Wl,-dead_strip -Wl,-x \
       -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
       -o "${FRAMEWORK_DIR}/${FWNAME}"
   else
     xcrun clang -dynamiclib -arch arm64 -isysroot "${IPHONESIMULATOR_SDK}" \
-      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip -Wl,-x \
       -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
       -o "${OUTPUT_DIR}/${FWNAME}-sim-arm64"
     xcrun clang -dynamiclib -arch x86_64 -isysroot "${IPHONESIMULATOR_SDK}" \
-      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip \
+      -mios-simulator-version-min=13.0 -Wl,-all_load -Wl,-dead_strip -Wl,-x \
       -Wl,-exported_symbols_list,"${EXPORTED_SYMBOLS_LIST}" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" \
       -Wl,-install_name,@rpath/${FWNAME}.framework/${FWNAME} \
       -Wl,-compatibility_version,1.0 -Wl,-current_version,"${OPENSSL_VERSION}" \
@@ -109,6 +109,8 @@ codesign --force --sign "${PERSONA_CODE_SIGN_IDENTITY}" \
   "${BASE_PWD}/Frameworks/${FWNAME}.xcframework"
 
 rm -f "${BASE_PWD}/Frameworks/${FWNAME}.xcframework.zip"
-/usr/bin/ditto -c -k --sequesterRsrc --keepParent \
-  "${BASE_PWD}/Frameworks/${FWNAME}.xcframework" \
-  "${BASE_PWD}/Frameworks/${FWNAME}.xcframework.zip"
+(
+  cd "${BASE_PWD}/Frameworks"
+  /usr/bin/zip -9 --symlinks -qr \
+    "./${FWNAME}.xcframework.zip" "./${FWNAME}.xcframework"
+)
