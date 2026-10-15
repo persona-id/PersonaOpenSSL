@@ -3,7 +3,7 @@
 # Yay shell scripting! This script builds a static version of
 # OpenSSL for iOS that contains code for arm64 and x86_64.
 
-set -e
+set -euo pipefail
 # set -x
 
 BASE_PWD="$PWD"
@@ -11,9 +11,12 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 # Setup paths to stuff we need
 
-if [[ -z $OPENSSL_VERSION ]]; then
- echo "OPENSSL_VERSION not set"
- exit 1
+OPENSSL_VERSION=${OPENSSL_VERSION:-3.5.8}
+OUTPUT_ROOT=${OPENSSL_OUTPUT_DIR:-"${SCRIPT_DIR}/.."}
+MODULE_NAME=${OPENSSL_MODULE_NAME:-PersonaOpenSSL}
+VISIBILITY_FLAGS=(-fvisibility=default)
+if [[ "${OPENSSL_PRIVATE_SYMBOLS:-0}" == "1" ]]; then
+   VISIBILITY_FLAGS=(-fvisibility=hidden)
 fi
 
 export OPENSSL_LOCAL_CONFIG_DIR="${SCRIPT_DIR}/../config"
@@ -60,6 +63,26 @@ OPENSSL_DISABLED_FEATURES=(
    no-blake2       # BLAKE2 hash - not in ICAO spec
    no-dsa          # DSA signatures - not used, only RSA and ECDSA needed
    no-ui           # User interface helpers - not needed (safe: only for password prompts)
+   no-cmp          # Certificate Management Protocol - not used by passport NFC
+   no-http         # OpenSSL HTTP client - not used by passport NFC
+   no-ml-dsa       # Post-quantum signatures - not used by passport NFC
+   no-ml-kem       # Post-quantum key encapsulation - not used by passport NFC
+   no-slh-dsa      # Post-quantum signatures - not used by passport NFC
+   no-rfc3779      # IP address/AS identifier certificate extensions - not used
+   no-apps         # Command-line applications are not shipped
+   no-docs         # Documentation is not shipped
+   no-tests        # Test binaries are not shipped
+   no-ec2m         # Binary-field EC is not used by ICAO passport protocols
+   no-ecx          # X25519, X448, and EdDSA are not used by ICAO passports
+   no-rmd160       # Passport digest suites use SHA-family digests
+   no-ocb          # OCB mode is not used by passport NFC
+   no-siv          # SIV mode is not used by passport NFC
+   no-legacy       # Disabled legacy algorithms do not require the legacy provider
+   no-dso          # Providers are linked in; runtime module loading is not used
+   no-autoload-config # iOS does not ship or load an OpenSSL configuration file
+   no-sock         # Networking is outside this libcrypto-only framework
+   no-atexit       # Avoid registering process-global cleanup from a framework
+   no-secure-memory # The secure-heap API is not used by PersonaNfc
 )
 
 # Turn versions like 1.2.3 into numbers that can be compare by bash.
@@ -100,9 +123,9 @@ configure() {
    fi
 
    if [ "$OS" == "iPhoneSimulator" ]; then
-      ${SRC_DIR}/Configure ios-sim-cross-$ARCH no-asm no-shared ${OPENSSL_DISABLED_FEATURES[@]} --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+      "${SRC_DIR}/Configure" "ios-sim-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" "${VISIBILITY_FLAGS[@]}" --api=1.1.1 -Os --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    elif [ "$OS" == "iPhoneOS" ]; then
-      ${SRC_DIR}/Configure ios-cross-$ARCH no-asm no-shared ${OPENSSL_DISABLED_FEATURES[@]} --prefix="${PREFIX}" &> "${PREFIX}.config.log"
+      "${SRC_DIR}/Configure" "ios-cross-${ARCH}" no-asm no-shared "${OPENSSL_DISABLED_FEATURES[@]}" "${VISIBILITY_FLAGS[@]}" --api=1.1.1 -Os --prefix="${PREFIX}" &> "${PREFIX}.config.log"
    fi
 }
 
@@ -122,7 +145,7 @@ build()
    # Apply patches if needed
    local PATCH_FILE="${SCRIPT_DIR}/../patches/openssl-${OPENSSL_VERSION}.patch"
    if [ -f "$PATCH_FILE" ]; then
-      patch -d "${SRC_DIR}" -p1 < $PATCH_FILE
+      patch -d "${SRC_DIR}" -p1 < "${PATCH_FILE}"
    fi
 
    echo "Building for ${OS} ${ARCH}"
@@ -132,21 +155,22 @@ build()
 
    # fix headers for Swift
 
-   sed -ie "s/BIGNUM \*I,/BIGNUM \*i,/g" ${SRC_DIR}/crypto/rsa/rsa_local.h   
+   sed -i.bak "s/BIGNUM \*I,/BIGNUM \*i,/g" "${SRC_DIR}/crypto/rsa/rsa_local.h"
 
-   configure "${OS}" $ARCH ${BUILD_DIR} ${SRC_DIR}
+   configure "${OS}" "${ARCH}" "${BUILD_DIR}" "${SRC_DIR}"
 
    LOG_PATH="${PREFIX}.build.log"
    echo "Building ${LOG_PATH}"
-   make &> ${LOG_PATH}
-   make install &> ${LOG_PATH}
-   cd ${BASE_PWD}
+   local BUILD_JOBS=${OPENSSL_BUILD_JOBS:-4}
+   make -j"${BUILD_JOBS}" &> "${LOG_PATH}"
+   make install_sw >> "${LOG_PATH}" 2>&1
+   cd "${BASE_PWD}"
 
    # Add arch to library (only libcrypto.a - libssl.a not needed for NFC passport reader)
-   if [ -f "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" ]; then
-      xcrun lipo "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a" "${PREFIX}/lib/libcrypto.a" -create -output "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a"
+   if [ -f "${OUTPUT_ROOT}/${TYPE}/lib/libcrypto.a" ]; then
+      xcrun lipo "${OUTPUT_ROOT}/${TYPE}/lib/libcrypto.a" "${PREFIX}/lib/libcrypto.a" -create -output "${OUTPUT_ROOT}/${TYPE}/lib/libcrypto.a"
    else
-      cp "${PREFIX}/lib/libcrypto.a" "${SCRIPT_DIR}/../${TYPE}/lib/libcrypto.a"
+      cp "${PREFIX}/lib/libcrypto.a" "${OUTPUT_ROOT}/${TYPE}/lib/libcrypto.a"
    fi
 
    rm -rf "${SRC_DIR}"
@@ -156,47 +180,43 @@ build_ios() {
    local TMP_BUILD_DIR=$( mktemp -d )
 
    # Clean up whatever was left from our previous build
-   rm -rf "${SCRIPT_DIR}"/../{iphonesimulator/include,iphonesimulator/lib}
-   mkdir -p "${SCRIPT_DIR}"/../{iphonesimulator/include,iphonesimulator/lib}
+   rm -rf "${OUTPUT_ROOT}"/{iphonesimulator/include,iphonesimulator/lib}
+   mkdir -p "${OUTPUT_ROOT}"/{iphonesimulator/include,iphonesimulator/lib}
 
    build "x86_64" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
    build "arm64" "iPhoneSimulator" ${TMP_BUILD_DIR} "iphonesimulator"
 
-   rm -rf "${SCRIPT_DIR}"/../{iphoneos/include,iphoneos/lib}
-   mkdir -p "${SCRIPT_DIR}"/../{iphoneos/include,iphoneos/lib}
+   rm -rf "${OUTPUT_ROOT}"/{iphoneos/include,iphoneos/lib}
+   mkdir -p "${OUTPUT_ROOT}"/{iphoneos/include,iphoneos/lib}
 
    build "arm64" "iPhoneOS" ${TMP_BUILD_DIR} "iphoneos"
 
-   ditto "${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl" "${SCRIPT_DIR}/../iphoneos/include/openssl"
-   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${SCRIPT_DIR}/../iphoneos/include/openssl/shim.h"
+   ditto "${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl" "${OUTPUT_ROOT}/iphoneos/include/openssl"
+   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${OUTPUT_ROOT}/iphoneos/include/openssl/shim.h"
 
    # Copy headers
-   ditto "${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-arm64/include/openssl" "${SCRIPT_DIR}/../iphonesimulator/include/openssl"
-   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${SCRIPT_DIR}/../iphonesimulator/include/openssl/shim.h"
+   ditto "${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-arm64/include/openssl" "${OUTPUT_ROOT}/iphonesimulator/include/openssl"
+   cp -f "${SCRIPT_DIR}/../shim/shim.h" "${OUTPUT_ROOT}/iphonesimulator/include/openssl/shim.h"
 
-   # fix inttypes.h
-   find "${SCRIPT_DIR}/../iphoneos/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/include <inttypes\.h>/include <sys\/types\.h>/g" {} \;
-   find "${SCRIPT_DIR}/../iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s/include <inttypes\.h>/include <sys\/types\.h>/g" {} \;
-
-   local OPENSSLCONF_PATH="${SCRIPT_DIR}/../iphonesimulator/include/openssl/opensslconf.h"
+   local OPENSSLCONF_PATH="${OUTPUT_ROOT}/iphonesimulator/include/openssl/opensslconf.h"
    echo "#if defined(__APPLE__) && defined (__x86_64__)" > ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-x86_64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#elif defined(__APPLE__) && defined (__arm64__)" >> ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneSimulator-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#endif" >> ${OPENSSLCONF_PATH}
 
-   OPENSSLCONF_PATH="${SCRIPT_DIR}/../iphoneos/include/openssl/opensslconf.h"
+   OPENSSLCONF_PATH="${OUTPUT_ROOT}/iphoneos/include/openssl/opensslconf.h"
    echo "#if defined(__APPLE__) && defined (__arm64__)" > ${OPENSSLCONF_PATH}
    cat ${TMP_BUILD_DIR}/${OPENSSL_VERSION}-iPhoneOS-arm64/include/openssl/opensslconf.h >> ${OPENSSLCONF_PATH}
    echo "#endif" >> ${OPENSSLCONF_PATH}
 
-   # fix include paths from <openssl/...> to <personaopenssl/...> to match framework name
+   # Match header imports to the selected framework module.
    # Run this ONCE after all headers (including opensslconf.h) are generated
-   echo "Fixing header include paths to use personaopenssl..."
-   find "${SCRIPT_DIR}/../iphoneos/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
-   find "${SCRIPT_DIR}/../iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <personaopenssl/|g" {} \;
+   echo "Fixing header include paths to use ${MODULE_NAME}..."
+   find "${OUTPUT_ROOT}/iphoneos/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <${MODULE_NAME}/|g" {} \;
+   find "${OUTPUT_ROOT}/iphonesimulator/include/openssl" -type f -name "*.h" -exec sed -i "" -e "s|include <openssl/|include <${MODULE_NAME}/|g" {} \;
 
-   rm -rf ${TMP_BUILD_DIR}
+   rm -rf "${TMP_BUILD_DIR}"
 }
 
 # Start
@@ -204,9 +224,9 @@ build_ios() {
 if [ ! -f "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz" ]; then
    curl -fL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz" -o "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz"
    curl -fL "https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz.sha256" -o "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz.sha256"
-   DIGEST=$( cat ${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz.sha256 )
+   DIGEST=$( awk '{print $1}' "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz.sha256" )
 
-   if [[ "$(shasum -a 256 "openssl-${OPENSSL_VERSION}.tar.gz" | awk '{print $1}')" != "${DIGEST}" ]]
+   if [[ "$(shasum -a 256 "${SCRIPT_DIR}/../openssl-${OPENSSL_VERSION}.tar.gz" | awk '{print $1}')" != "${DIGEST}" ]]
    then
       echo "openssl-${OPENSSL_VERSION}.tar.gz: checksum mismatch"
       exit 1

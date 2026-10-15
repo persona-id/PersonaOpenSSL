@@ -38,6 +38,16 @@ $ make
 
 The result of a build process is put inside [Frameworks](Frameworks/) directory.
 
+The dynamic framework intentionally exports only the OpenSSL entry points listed in
+`config/PersonaOpenSSL.exports`. This surface matches PersonaNfc's passport reader;
+add any newly consumed OpenSSL entry point to that list before rebuilding the framework.
+
+### Private static iOS crypto artifact
+
+`make static` builds `Frameworks/PersonaOpenSSLStatic.xcframework.zip` for arm64 iOS and arm64/x86_64 iOS Simulator, using the same OpenSSL feature configuration as the dynamic framework. The XCFramework contains static `.a` libraries rather than framework bundles, so Xcode does not embed a separate framework in the app. The C module is `PersonaOpenSSLStatic`; the archive is compiled with hidden symbol visibility so an SDK can incorporate crypto without exporting it or requiring a separate runtime framework. As of 3.5.8000, this is the only product the Swift package publishes.
+
+Publish the ZIP as a release asset, then set the static binary target's URL and `swift package compute-checksum` result in `Package.swift` before tagging the release. Consumers should import the static module internally and confirm their emitted Swift interfaces do not require it. The artifact includes the OpenSSL license and privacy manifest; include the license in the consuming SDK's distribution.
+
 ### Hardened Runtime (macOS) and Xcode
 
 Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integration) won't load properly in your app if the app uses **Sign to Run Locally**  Signing Certificate with Hardened Runtime enabled. It is possible to setup Xcode like this. To solve the problem you have two options:
@@ -46,9 +56,13 @@ Binary `OpenSSL.xcframework` (Used by the Swift Package Manager package integrat
 
 ### Swift Package Manager
 
+Starting with 3.5.8000, this package is internal to PersonaNfc, which links it statically. Apps should not add it directly.
+
+PersonaNfc 3.12.0 and earlier link the dynamic framework from 2.0.x and must stay on that version:
+
 ```
 dependencies: [
-    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", .upToNextMinor(from: "2.0.0"))
+    .package(url: "https://github.com/persona-id/PersonaOpenSSL.git", exact: "2.0.2")
 ]
 ```
 
@@ -69,4 +83,3 @@ These libraries work for both iOS and macOS. It is your prerogative to check. As
 #### What is XCFramework?
 
 OpenSSL.xcframework is distributed as a multiplatform XCFramework bundle, for mor information chekout the documentation [Distributing Binary Frameworks as Swift Packages](https://developer.apple.com/documentation/xcode/distributing-binary-frameworks-as-swift-packages)
-

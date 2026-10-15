@@ -1,6 +1,5 @@
 framework module PersonaOpenSSL {
   umbrella header "PersonaOpenSSL.h"
   export *
-
   module * { export * }
 }
